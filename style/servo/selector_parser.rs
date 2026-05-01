@@ -124,6 +124,17 @@ impl ::selectors::parser::PseudoElement for PseudoElement {
     fn parses_as_element_backed(&self) -> bool {
         matches!(self, Self::DetailsContent)
     }
+
+    /// UA shadow widget pseudos that represent real interactive shadow
+    /// descendants (slider thumb, scrollbar parts, etc.) accept user-action
+    /// state pseudo-classes (:hover, :active, :focus, :disabled) after them.
+    /// Mirrors Gecko's `supports_user_action_state` mechanism.
+    fn accepts_state_pseudo_classes(&self) -> bool {
+        matches!(
+            self,
+            Self::SliderFill | Self::SliderThumb | Self::SliderTrack
+        )
+    }
 }
 
 /// The number of eager pseudo-elements. Keep this in sync with cascade_type.
