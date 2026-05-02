@@ -729,6 +729,16 @@ impl<'a, 'i> ::selectors::Parser<'i> for SelectorParser<'a> {
             "slider-fill" => SliderFill,
             "slider-thumb" => SliderThumb,
             "slider-track" => SliderTrack,
+            // Vendor-prefixed slider pseudos are de facto standard - production
+            // React/Tailwind/etc. ships them and never the modern unprefixed
+            // names. Without these aliases Servo silently ignores all author
+            // slider styling, breaking "open same HTML in Firefox + host"
+            // parity. See servo-unity-6/docs/work/webkit_moz_pseudo_alias_issue.md.
+            "-webkit-slider-thumb" => SliderThumb,
+            "-webkit-slider-runnable-track" => SliderTrack,
+            "-moz-range-thumb" => SliderThumb,
+            "-moz-range-track" => SliderTrack,
+            "-moz-range-progress" => SliderFill,
             "-servo-anonymous-box" => {
                 if !self.in_user_agent_stylesheet() {
                     return Err(location.new_custom_error(SelectorParseErrorKind::UnexpectedIdent(name.clone())))
