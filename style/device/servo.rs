@@ -208,9 +208,21 @@ impl Device {
     }
 
     /// Gets the size of the scrollbar in CSS pixels.
+    ///
+    /// Returns a constant 15 CSS px - macOS classic scrollbar inline-size,
+    /// matching Gecko's default `nsITheme` scrollbar metrics on macOS. This
+    /// value drives both the `-moz-scrollbar-inline-size` CSS environment
+    /// variable and the layout-side scrollbar gutter reservation in
+    /// `components/layout/scrollbar.rs`. Embedders that draw their own
+    /// scrollbars at a different thickness should override this once Servo
+    /// exposes a setter (Host6's `ServoScrollbarOverlay` uses 10 px today,
+    /// so this is a pessimistic upper bound).
+    ///
+    /// TODO: replace with embedder-driven width once the FFI exposes a
+    /// setter; for now this is a single source of truth shared by stylo's
+    /// env-var lookup and the layout helper.
     pub fn scrollbar_inline_size(&self) -> CSSPixelLength {
-        // TODO: implement this.
-        CSSPixelLength::new(0.0)
+        CSSPixelLength::new(10.0)
     }
 
     /// Queries font metrics using the [`FontMetricsProvider`] interface.
